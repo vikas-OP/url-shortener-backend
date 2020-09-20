@@ -1,4 +1,4 @@
-const express = require("Express");
+const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://vikas-tinyurl.netlify.app",
+    origin: "https://vikas-student-mentor.netlify.app",
   })
 );
 
