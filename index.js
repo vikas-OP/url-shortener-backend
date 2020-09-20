@@ -53,7 +53,7 @@ app.post("/register", async (req, res) => {
       from: "noreplyvikaspassreset",
       to: `${userEmail}`,
       subject: "Register using nodeJS",
-      html: `<p>To register <a href = "http://127.0.0.1:5500/activate.html?${activationLink}">Click here</a>
+      html: `<p>To register <a href = "https://vikas-tinyurl.netlify.app/activate.html?${activationLink}">Click here</a>
         </p>`,
     };
 
@@ -212,7 +212,7 @@ app.put("/forgotpassword", async (req, res) => {
         from: "noreplyvikaspassreset",
         to: `${email}`,
         subject: "Change password using nodeJS",
-        html: `<p>To change your password <a href = "http://127.0.0.1:5500/resetPassword.html?${resetLink}">Click here</a>
+        html: `<p>To change your password <a href = "https://vikas-tinyurl.netlify.app/resetPassword.html?${resetLink}">Click here</a>
         </p>`,
       };
 
