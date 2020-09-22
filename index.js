@@ -5,10 +5,10 @@ const crypto = require("crypto");
 const mongodb = require("mongodb");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const mongoClient = mongodb.MongoClient;
-const url =
-  "mongodb+srv://test_user:9r4dDd8Itvp0Nprb@cluster0.zzynb.mongodb.net?retryWrites=true&w=majority";
+const url = process.env.DATABASE_URL;
 const app = express();
 app.use(express.json());
 app.use(
@@ -46,7 +46,7 @@ app.post("/register", async (req, res) => {
       service: "gmail",
       auth: {
         user: "noreplyvikaspassreset",
-        pass: "passwordreset123",
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
     var mailOptions = {
@@ -152,7 +152,7 @@ app.post("/login", async (req, res) => {
     if (user) {
       let result = await bcrypt.compare(password, user.password);
       if (result) {
-        jwt.sign(user, "secretkey", (err, token) => {
+        jwt.sign(user, process.env.ACCESS_TOKEN_SECRET_KEY, (err, token) => {
           if (err) {
             res.status(500).json({
               stat: "failure",
@@ -205,7 +205,7 @@ app.put("/forgotpassword", async (req, res) => {
         service: "gmail",
         auth: {
           user: "noreplyvikaspassreset",
-          pass: "passwordreset123",
+          pass: process.env.EMAIL_PASSWORD,
         },
       });
       var mailOptions = {
@@ -442,10 +442,7 @@ app.get("/longurl/:shorturl", async (req, res) => {
     let db = client.db("url_shortener");
     let urlInfo = await db.collection("urls").findOne({ shortUrl: shortUrl });
     client.close();
-    res.json({
-      stat: "success",
-      longUrl: urlInfo.longUrl,
-    });
+    res.redirect(urlInfo.longUrl);
   } catch (error) {
     if (client) {
       client.close();
@@ -458,11 +455,13 @@ app.get("/longurl/:shorturl", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => console.log("server started"));
+app.listen(process.env.PORT || 3000, () => {
+  console.log("server started");
+});
 
 function verifyToken(req, res, next) {
   const token = req.headers["authorization"];
-  jwt.verify(token, "secretkey", (err, decode) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, decode) => {
     if (err) {
       res.json({
         stat: "failure",
